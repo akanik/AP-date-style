@@ -57,3 +57,44 @@ The code:
     }
 - **Add code to node--contentTYPE.tpl.php file** Add the variable we created to your node template file
 `<?php print $ap_date; ?>`
+
+## The code explained
+
+    //AP date style  
+    $post_date_raw = new DateTime($variables['node']->field_original_post_date['und'][0]['value']);
+
+Create a variable called `$post_date_raw` to house our new DateTime object. We create the object from the field we added to our content type. I dug into the field elements with the devel module to discover the path of the variable: `$variables['node']->field_original_post_date['und'][0]['value']`. 
+
+`field_original_post_date` should be replaced with your variable name.
+
+    $post_date_month = $post_date_raw->format('F');
+    $post_date_day_year = $post_date_raw->format('j, Y');
+
+Create variables to print the month and the day and year separately. F prints the full month name, January is January, March is March, etc. j, Y prints the day and year in this format: 23, 2014.
+
+    if($post_date_month == "September"){  
+        $ap_date_sept = "Sept. " . $post_date_day_year;  
+        $variables['ap_date'] = $ap_date_sept; 
+
+We want to start our if statement with the oddball, September. With longer months, we usually would want to shorten it to three letters and a period. However, with September, we need to shorten the month name to four letters and a period. So, if the month equals September, set the `$ap_date_sept` variable to Sept. plus our day and year.
+
+Since Drupal has a specific way it wants variables set,  we use `$variables['ap_date']` to equal the `$ap_date_sept` variable we just created. This way we can use `$ap_date` in our node--contentTYPE.tpl.php file.
+
+    }elseif(strlen($post_date_month) > 5){  
+        $ap_date_short = substr($post_date_month, 0,3) . "." . " " . $post_date_day_year;  
+        $variables['ap_date'] = $ap_date_short;  
+
+The next part of our if statement checks for longer months. If the month is longer than five characters, then we want to shorten it to three characters using the php string function `substr()`. Then we add a period and the day and year. 
+
+Again, because Drupal has a specific way it wants variables set, we use `variables['ap_date']` to equal the `$ap_date_short` variable we just created.
+
+    }else{  
+        $ap_date_long = $post_date_month . " " . $post_date_day_year;  
+        $variables['ap_date'] = $ap_date_long;  
+    }
+
+The last part of our if statement covers months under five characters, months that we don't want to alter the disply of. If the month is shorter than five characters, simply print it and add the day and year at the end.
+
+Make sure the Druapl variable equals the variable we just set up (`$ap_date_long`) in case the condition is true.
+
+And there we have it.
