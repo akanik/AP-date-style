@@ -5,8 +5,11 @@ Create a date variable for Drupal 7 that adheres to the AP style
 
 ## How coding languages sees months
 Coding languages generally have three different human-readable  ways to display months:
+
 1. spell it out; January is January, March is March, etc.
+
 2. abbreviate with a set number of characters; January is Jan., March is Mar., etc.
+
 3. use numbers; Janury is 1, March is 3, etc.
 
 See the php date format manual: http://us3.php.net/manual/en/function.date.php
@@ -34,21 +37,23 @@ We need to create a variable in our template.php that sees our date field, runs 
 ## The process
 - **Add a date field to your content type** You can choose what type of date field depending on your specific needs. Here is a guide to the pros/cons of each date type: https://drupal.org/node/1326872
 - **Add code to template.php** Add this code to your theme's template.php file under the `function yourTHEME_preprocess_node(&$variables, $hook){` for the variable to apply to all content types or `function yourTHEME_preprocess_node_contentTYPE(&$variables, $hook){` for the variable to apply just to a choosen content type.
+
 The code:
- ` //AP date style
-  $post_date_raw = new DateTime($variables['node']->field_original_post_date['und'][0]['value']);
-  $post_date_month = $post_date_raw->format('F');
-  $post_date_day_year = $post_date_raw->format('j, Y');
+
+    //AP date style  
+    $post_date_raw = new DateTime($variables['node']->field_original_post_date['und'][0]['value']);  
+    $post_date_month = $post_date_raw->format('F');  
+    $post_date_day_year = $post_date_raw->format('j, Y');  
   
-  if($post_date_month == "September"){
-  		      $ap_date_sept = "Sept. " . $post_date_day_year;
-		      		    $variables['ap_date'] = $ap_date_sept;
-				    }elseif(strlen($post_date_month) > 5){
-    $ap_date_short = substr($post_date_month, 0,3) . "." . " " . $post_date_day_year;
-    $variables['ap_date'] = $ap_date_short;
-    }else{
-	$ap_date_long = $post_date_month . " " . $post_date_day_year;
-		      $variables['ap_date'] = $ap_date_long;
-		      }`
+    if($post_date_month == "September"){  
+    	$ap_date_sept = "Sept. " . $post_date_day_year;  
+	$variables['ap_date'] = $ap_date_sept;  
+    }elseif(strlen($post_date_month) > 5){  
+        $ap_date_short = substr($post_date_month, 0,3) . "." . " " . $post_date_day_year;  
+	$variables['ap_date'] = $ap_date_short;  
+    }else{  
+	$ap_date_long = $post_date_month . " " . $post_date_day_year;  
+	$variables['ap_date'] = $ap_date_long;  
+    }
 - **Add code to node--contentTYPE.tpl.php file** Add the variable we created to your node template file
 `<?php print $ap_date; ?>`
