@@ -47,13 +47,13 @@ The code:
   
     if($post_date_month == "September"){  
     	$ap_date_sept = "Sept. " . $post_date_day_year;  
-	$variables['ap_date'] = $ap_date_sept;  
+        $variables['ap_date'] = $ap_date_sept;  
     }elseif(strlen($post_date_month) > 5){  
         $ap_date_short = substr($post_date_month, 0,3) . "." . " " . $post_date_day_year;  
-	$variables['ap_date'] = $ap_date_short;  
+        $variables['ap_date'] = $ap_date_short;  
     }else{  
-	$ap_date_long = $post_date_month . " " . $post_date_day_year;  
-	$variables['ap_date'] = $ap_date_long;  
+        $ap_date_long = $post_date_month . " " . $post_date_day_year;  
+        $variables['ap_date'] = $ap_date_long;  
     }
 - **Add code to node--contentTYPE.tpl.php file** Add the variable we created to your node template file
 `<?php print $ap_date; ?>`
